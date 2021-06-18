@@ -34,19 +34,9 @@ func main() {
 	flag.StringVar(&routingKey, "r", "actions", "rmq routing key")
 	flag.Parse()
 
-	glog.Infoln("Script started")
+	glog.Infoln("Script starts")
 
 	beginTime := time.Now()
-
-	publisher := rep.NewPublisher("amqp://user:password@0.0.0.0:5672/sp")
-
-	err := publisher.InitChannel()
-	if err != nil {
-		glog.Fatalf("publisher.InitChannel() Error: %v", err)
-	}
-
-	defer publisher.CloseChannel()
-
 	eventChan := make(chan models.Event, 100)
 	eventGeneratingWorkers := &sync.WaitGroup{}
 	eventLimitsForWorker := rep.GetLimitsForWorkers(eventLimit, workerGenerate)
